@@ -115,6 +115,11 @@ class BambooHR
     protected function api($name)
     {
         switch ($name) {
+            case 'applicantTracking':
+            case 'applicant-tracking':
+            case 'applicant_tracking':
+                return new Api\ApplicantTracking($this);
+
             case 'benefit':
             case 'benefits':
                 return new Api\Benefits($this);
