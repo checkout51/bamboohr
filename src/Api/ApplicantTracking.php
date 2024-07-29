@@ -22,14 +22,27 @@ class ApplicantTracking extends AbstractApi
     /**
      * Get applications
      *
-     * @param string $jobId
+     * @param int $jobId
      * @param int $page
-     *
-     * @return \BambooHR\Api\Response
+     * @param string|null $applicationStatusId
+     * @param string|null $searchString
+     * @return Response
      */
-    public function getApplications(int $jobId, int $page = 1)
+    public function getApplications(int $jobId, int $page = 1, string $applicationStatusId = null, $searchString = null)
     {
-        return $this->get("applicant_tracking/applications", ["page" => $page, "jobId" => $jobId]);
+        $params = [
+            "jobId" => $jobId,
+            "page" => $page
+        ];
+
+        if ($applicationStatusId) {
+            $params["applicationStatusId"] = $applicationStatusId;
+        }
+        if ($searchString) {
+            $params["searchString"] = $searchString;
+        }
+
+        return $this->get("applicant_tracking/applications", $params);
     }
 
 
@@ -46,6 +59,17 @@ class ApplicantTracking extends AbstractApi
     }
 
     /**
+     * Get application comments
+     *
+     * @param int $applicationId
+     * @return Response
+     */
+    public function getApplicationComments(int $applicationId)
+    {
+        return $this->get("applicant_tracking/applications/{$applicationId}/comments");
+    }
+
+    /**
      * Add application comment
      *
      * @param int $applicationId
@@ -54,7 +78,10 @@ class ApplicantTracking extends AbstractApi
      */
     public function addApplicationComment(int $applicationId, string $comment)
     {
-        return $this->post("applicant_tracking/applications/{$applicationId}/comments", json_encode(["type" => "comment", "comment" => $comment]));
+        return $this->post("applicant_tracking/applications/{$applicationId}/comments", json_encode([
+            "type" => "comment",
+            "comment" => $comment
+        ]));
     }
 
     /**
